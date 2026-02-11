@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>14th & 15th ❤️</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    text-align: center;
+}
+
+.container {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    position: relative;
+    z-index: 2;
+    max-width: 500px;
+}
+
+h1 {
+    font-size: 1.8em;
+    color: #ff4b6e;
+}
+
+p {
+    font-size: 1.1em;
+}
+
+.buttons {
+    margin-top: 30px;
+    position: relative;
+    height: 140px;
+}
+
+button {
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#yesBtn {
+    font-size: 24px;
+    padding: 20px 50px;
+    background: #ff4b6e;
+    color: white;
+}
+
+#yesBtn:hover {
+    transform: scale(1.1);
+}
+
+#noBtn {
+    position: absolute;
+    font-size: 18px;
+    padding: 15px 35px;
+    background: #ddd;
+}
+
+/* Celebration */
+.celebration {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+}
+
+.bigRed {
+    color: red;
+    font-size: 2em;
+    font-weight: bold;
+}
+
+.smallBlack {
+    margin-top: 10px;
+    font-size: 1.1em;
+}
+
+/* Fireworks */
+#fireworks {
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+}
+
+/* Floating Hearts */
+.heart {
+    position: fixed;
+    bottom: -20px;
+    font-size: 24px;
+    animation: floatUp 6s linear infinite;
+}
+
+@keyframes floatUp {
+    0% { transform: translateY(0); opacity: 1; }
+    100% { transform: translateY(-100vh); opacity: 0; }
+}
+
+iframe {
+    display: none;
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="fireworks"></canvas>
+
+<!-- PAGE 1 -->
+<div class="container" id="mainBox">
+    <h1>14th is Valentine’s… ❤️<br>15th is My Birthday 🎂</h1>
+    <p>
+        So I thought… instead of celebrating them separately,  
+        why not make it one unforgettable memory with YOU?  
+        <br><br>
+        Out of everyone I could choose to share these special days with,  
+        I’m choosing you.  
+        <br><br>
+        Let’s make the 14th romantic…  
+        and let the 15th start my new year with the woman I truly want beside me.  
+        <br><br>
+        So tell me… will you be mine for both days? ❤️
+    </p>
+
+    <div class="buttons">
+        <button id="yesBtn">YES ❤️</button>
+        <button id="noBtn">NO</button>
+    </div>
+</div>
+
+<!-- PAGE 2 -->
+<div class="celebration" id="celebrationBox">
+    <h1 class="bigRed">
+        You just made my Valentine AND my Birthday unforgettable ❤️🔥
+    </h1>
+    <p class="smallBlack">
+        Yoh… now I have to behave because I can’t lose my favourite person in the same week I turn a year older 😭😂  
+        But don’t worry… I plan on spoiling you properly.
+    </p>
+</div>
+
+<!-- Song -->
+<iframe id="song"
+src="https://www.youtube.com/embed/0o6mV8n1s8k?autoplay=1&loop=1&playlist=0o6mV8n1s8k">
+</iframe>
+
+<script>
+const noBtn = document.getElementById("noBtn");
+const yesBtn = document.getElementById("yesBtn");
+
+let yesSize = 24;
+
+/* NO button dodge */
+function moveNoButton() {
+    const x = Math.random() * (window.innerWidth - 100);
+    const y = Math.random() * (window.innerHeight - 100);
+
+    noBtn.style.position = "fixed";
+    noBtn.style.left = x + "px";
+    noBtn.style.top = y + "px";
+
+    yesSize += 4;
+    yesBtn.style.fontSize = yesSize + "px";
+}
+
+noBtn.addEventListener("mouseover", moveNoButton);
+noBtn.addEventListener("touchstart", function(e) {
+    e.preventDefault();
+    moveNoButton();
+});
+
+/* YES click */
+yesBtn.addEventListener("click", () => {
+    document.getElementById("mainBox").style.display = "none";
+    document.getElementById("celebrationBox").style.display = "flex";
+    document.getElementById("song").style.display = "block";
+    startFireworks();
+    startHearts();
+});
+
+/* FIREWORKS */
+const canvas = document.getElementById("fireworks");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+window.addEventListener("resize", () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+});
+
+let particles = [];
+
+function random(min, max) {
+    return Math.random() * (max - min) + min;
+}
+
+function createFirework() {
+    const x = random(100, canvas.width - 100);
+    const y = random(100, canvas.height / 2);
+
+    for (let i = 0; i < 80; i++) {
+        particles.push({
+            x: x,
+            y: y,
+            angle: Math.random() * Math.PI * 2,
+            speed: random(2, 6),
+            radius: 3,
+            life: 100
+        });
+    }
+}
+
+function drawParticles() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    particles.forEach((p, index) => {
+        p.x += Math.cos(p.angle) * p.speed;
+        p.y += Math.sin(p.angle) * p.speed;
+        p.life--;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `hsl(${Math.random() * 360}, 100%, 60%)`;
+        ctx.fill();
+
+        if (p.life <= 0) {
+            particles.splice(index, 1);
+        }
+    });
+
+    requestAnimationFrame(drawParticles);
+}
+
+let fireworkInterval;
+
+function startFireworks() {
+    if (!fireworkInterval) {
+        fireworkInterval = setInterval(createFirework, 800);
+        drawParticles();
+    }
+}
+
+/* FLOATING HEARTS */
+function startHearts() {
+    setInterval(() => {
+        const heart = document.createElement("div");
+        heart.classList.add("heart");
+        heart.innerHTML = "❤️";
+        heart.style.left = Math.random() * window.innerWidth + "px";
+        heart.style.fontSize = Math.random() * 20 + 20 + "px";
+        document.body.appendChild(heart);
+
+        setTimeout(() => {
+            heart.remove();
+        }, 6000);
+    }, 400);
+}
+</script>
+
+</body>
+</html>
